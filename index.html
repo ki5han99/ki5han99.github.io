@@ -186,7 +186,47 @@
   .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border2);color:var(--ink);padding:.7rem 1.2rem;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;opacity:0;pointer-events:none;transition:all .3s;z-index:400}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+  /* CHAT WIDGET */
+  .chat-fab{position:fixed;bottom:1.75rem;right:1.75rem;z-index:250;width:58px;height:58px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px #ff7a4566;transition:transform .25s}
+  .chat-fab:hover{transform:scale(1.07)}
+  .chat-fab svg{width:24px;height:24px;color:var(--accent-ink)}
+  .chat-fab .fab-dot{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:var(--lime);border:2px solid var(--bg);animation:pulse 2s infinite}
+  .chat-panel{position:fixed;bottom:1.75rem;right:1.75rem;z-index:260;width:min(380px,calc(100vw - 2rem));height:min(560px,calc(100vh - 4rem));background:var(--card);border:1px solid var(--border2);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px -12px #000a;opacity:0;transform:translateY(16px) scale(.97);pointer-events:none;transition:opacity .25s, transform .25s}
+  .chat-panel.open{opacity:1;transform:none;pointer-events:auto}
+  .chat-head{display:flex;align-items:center;gap:.7rem;padding:1rem 1.1rem;border-bottom:1px solid var(--border);background:var(--card2)}
+  .chat-head-avatar{width:34px;height:34px;border-radius:50%;overflow:hidden;flex-shrink:0;border:1px solid var(--border2)}
+  .chat-head-avatar img{width:100%;height:100%;object-fit:cover}
+  .chat-head-info{flex:1;min-width:0}
+  .chat-head-name{font-size:13.5px;font-weight:600}
+  .chat-head-status{font-size:11px;color:var(--lime);font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:.35rem}
+  .chat-head-status .dot{width:6px;height:6px;border-radius:50%;background:var(--lime)}
+  .chat-close{background:none;border:none;color:var(--ink3);cursor:pointer;padding:.3rem;display:flex;transition:color .2s}
+  .chat-close:hover{color:var(--ink)}
+  .chat-body{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.75rem}
+  .chat-msg{max-width:85%;padding:.6rem .85rem;border-radius:12px;font-size:13px;line-height:1.55;animation:msgIn .25s ease}
+  @keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .chat-msg.bot{align-self:flex-start;background:var(--card2);border:1px solid var(--border);border-bottom-left-radius:3px;color:var(--ink)}
+  .chat-msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:3px;font-weight:500}
+  .chat-msg.typing{display:flex;gap:4px;padding:.8rem 1rem}
+  .chat-msg.typing span{width:6px;height:6px;border-radius:50%;background:var(--ink3);animation:typingDot 1.2s infinite}
+  .chat-msg.typing span:nth-child(2){animation-delay:.2s}
+  .chat-msg.typing span:nth-child(3){animation-delay:.4s}
+  @keyframes typingDot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  .chat-suggestions{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 1rem .75rem}
+  .chat-sugg-btn{background:var(--card2);border:1px solid var(--border);color:var(--ink2);padding:.35rem .7rem;border-radius:20px;font-size:11.5px;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace}
+  .chat-sugg-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .chat-input-row{display:flex;gap:.5rem;padding:.85rem;border-top:1px solid var(--border);background:var(--card2)}
+  .chat-input-row input{flex:1;background:var(--bg2);border:1px solid var(--border);color:var(--ink);padding:.6rem .8rem;border-radius:8px;font-size:13px;font-family:'Space Grotesk',sans-serif;outline:none;transition:border-color .2s}
+  .chat-input-row input:focus{border-color:var(--accent)}
+  .chat-send{background:var(--accent);border:none;color:var(--accent-ink);width:38px;height:38px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .2s}
+  .chat-send:disabled{opacity:.4;cursor:default}
+  .chat-disclaimer{font-size:10px;color:var(--ink3);text-align:center;padding:.4rem 0 .7rem;font-family:'JetBrains Mono',monospace}
+
   /* MOBILE */
+  @media(max-width:480px){
+    .chat-panel{right:.75rem;left:.75rem;bottom:.75rem;width:auto;height:min(70vh,520px)}
+    .chat-fab{bottom:1.25rem;right:1.25rem}
+  }
   @media(max-width:720px){
     .nav-links{
       display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;
@@ -356,6 +396,34 @@
 <footer>built by <a href="https://github.com/ki5han99" target="_blank" rel="noopener">Kishan Edimadakala</a> · Data Engineer · Jersey City, NJ · <span id="year"></span></footer>
 
 <div class="toast" id="toast"></div>
+
+<!-- AI CHAT WIDGET -->
+<button class="chat-fab" id="chatFab" aria-label="Chat with my AI assistant">
+  <span class="fab-dot"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="chat-head-avatar"><img src="Kishan_Edimadakala.jpeg" alt="" onerror="this.parentElement.style.display='none'"/></div>
+    <div class="chat-head-info">
+      <div class="chat-head-name">Ask Kishan (AI)</div>
+      <div class="chat-head-status"><span class="dot"></span>trained on his resume</div>
+    </div>
+    <button class="chat-close" id="chatClose" aria-label="Close chat">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-suggestions" id="chatSuggestions"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Ask about his experience, skills…" maxlength="500" autocomplete="off"/>
+    <button class="chat-send" id="chatSend" aria-label="Send">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+    </button>
+  </div>
+  <div class="chat-disclaimer">AI-generated, speaking as Kishan · may not be 100% accurate</div>
+</div>
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
@@ -572,6 +640,100 @@ function showToast(msg){
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
 }
+
+// AI chat widget
+const CHAT_API = 'https://ki5han99-portfolio.vercel.app/api/chat';
+const chatFab = document.getElementById('chatFab');
+const chatPanel = document.getElementById('chatPanel');
+const chatClose = document.getElementById('chatClose');
+const chatBody = document.getElementById('chatBody');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+const chatSuggestions = document.getElementById('chatSuggestions');
+
+let chatHistory = [];
+let chatOpened = false;
+
+const SUGGESTIONS = [
+  "What do you do at Amazon?",
+  "What are your strongest skills?",
+  "Tell me about a project you're proud of",
+  "What's your education background?",
+];
+
+function addMsg(role, text){
+  const el = document.createElement('div');
+  el.className = 'chat-msg ' + (role === 'user' ? 'user' : 'bot');
+  el.textContent = text;
+  chatBody.appendChild(el);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return el;
+}
+
+function addTyping(){
+  const el = document.createElement('div');
+  el.className = 'chat-msg bot typing';
+  el.innerHTML = '<span></span><span></span><span></span>';
+  chatBody.appendChild(el);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return el;
+}
+
+function renderSuggestions(){
+  chatSuggestions.innerHTML = SUGGESTIONS.map(s=>`<button class="chat-sugg-btn">${s}</button>`).join('');
+  chatSuggestions.querySelectorAll('.chat-sugg-btn').forEach((btn,i)=>{
+    btn.addEventListener('click', ()=>sendChat(SUGGESTIONS[i]));
+  });
+}
+
+async function sendChat(text){
+  text = (text || chatInput.value).trim();
+  if(!text) return;
+  chatInput.value = '';
+  chatSuggestions.innerHTML = '';
+  addMsg('user', text);
+  chatSend.disabled = true;
+  const typingEl = addTyping();
+
+  try{
+    const res = await fetch(CHAT_API, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message: text, history: chatHistory })
+    });
+    const data = await res.json();
+    typingEl.remove();
+    if(!res.ok || data.error){
+      addMsg('bot', "Hmm, something went wrong on my end. Try again, or email me at edimadakala.kishan@gmail.com.");
+    } else {
+      addMsg('bot', data.text);
+      chatHistory.push({role:'user', text});
+      chatHistory.push({role:'model', text: data.text});
+    }
+  } catch(err){
+    typingEl.remove();
+    addMsg('bot', "Looks like I can't reach the server right now — try again in a moment.");
+  } finally {
+    chatSend.disabled = false;
+    chatInput.focus();
+  }
+}
+
+function openChat(){
+  chatPanel.classList.add('open');
+  if(!chatOpened){
+    chatOpened = true;
+    addMsg('bot', "Hey! I'm an AI trained on Kishan's resume and background — ask me anything about his experience, skills, or projects.");
+    renderSuggestions();
+  }
+  setTimeout(()=>chatInput.focus(), 200);
+}
+function closeChat(){ chatPanel.classList.remove('open'); }
+
+chatFab.addEventListener('click', openChat);
+chatClose.addEventListener('click', closeChat);
+chatSend.addEventListener('click', ()=>sendChat());
+chatInput.addEventListener('keydown', e=>{ if(e.key === 'Enter') sendChat(); });
 </script>
 </body>
 </html>
